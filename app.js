@@ -1,50 +1,27 @@
 const http = require('http')
-const fs = require('fs')
-const path = require('path')
-const port = process.env.PORT || 8080
+const router = require('./router')
+const socketio = require('socket.io')
 
 const server = http.createServer()
+const port = process.env.PORT || 8080
 
-server.on('request', onRequest)
+server.on('request', router)
 server.on('listening', onListening)
 
 server.listen(port)
 
-function onRequest (req, res) {
-  let uri = req.url
+const io = socketio(server)
+io.on('connection', onConnection)
 
-  if (uri.startsWith('/index') || uri === '/') return serveIndex(res)
+function onConnection(socket) {
+  console.log(`Client connected ${socket.id}`);
 
-  if (uri.startsWith('/app.js')) return serveApp(res)
+  socket.on('message', function(message){
+    console.log(`Message from client ${message}`);
 
-  res.statusCode = 404
-  res.setHeader('Content-Type', 'text/plain')
-  res.end(`404 Not found: ${uri}`)
-}
+    socket.broadcast.emit('message', 'Something to send')
 
-function serveIndex (res) {
-  let index = path.join(__dirname, 'public', 'index.html')
-  let rs = fs.createReadStream(index)
-
-  res.setHeader('Content-Type', 'text/html')
-  rs.pipe(res)
-
-  rs.on('error', function (err) {
-    res.setHeader('Content-Type', 'text/plain')
-    res.end(err.message)
-  })
-}
-
-function serveApp (res) {
-  let app = path.join(__dirname, 'public', 'app.js')
-  let rs = fs.createReadStream(app)
-
-  res.setHeader('Content-Type', 'text/javascript')
-  rs.pipe(res)
-
-  rs.on('error', function (err) {
-    res.setHeader('Content-Type', 'text/plain')
-    res.end(err.message)
+    socket.emit('messageack', 'Something 2 send')
   })
 }
 

@@ -4,12 +4,14 @@
   "description": "base of the server for the app",
   "main": "app.js",
   "scripts": {
-    "start" : "node app.js",
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "nodemon": "^1.17.2"
+    "nodemon": "^1.17.2",
+    "socket.io": "^2.0.4",
+    "st": "^1.2.2"
   }
 }

@@ -1,0 +1,14 @@
+{
+  "name": "test-server",
+  "version": "0.0.1",
+  "description": "base of the server for the app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^1.17.2"
+  }
+}
